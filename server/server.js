@@ -35,7 +35,63 @@ app.get("/api/planets/:id", function (req, res) {
           res.end();
         }
     })
-})
+});
+
+app.get("/api/characters", function (req, res) {
+  dao.call("findAllCharacters", {}, (result) => {
+    if (result.characters !== undefined) {
+      res.send(result.characters);
+    } else {
+      res.statusCode = 404;
+      res.end();
+    }
+  });
+});
+
+app.get("/api/characters/:id", function (req, res) {
+    dao.call("findOneCharacter", {id: req.params.id}, (result) => {
+        if (result.character !== undefined) {
+          res.send(result.character);
+        } else {
+          res.statusCode = 404;
+          res.end();
+        }
+    })
+});
+
+app.get("/api/characters/:id/films", function (req, res) {
+    dao.call("findFilmsByCharacter", {id: req.params.id}, (result) => {
+        if (result !== undefined) {
+          res.send(result);
+        } else {
+          res.statusCode = 404;
+          res.end();
+        }
+    })
+});
+
+app.get("/api/planets/:id/films", function (req, res) {
+    dao.call("findFilmsByPlanet", {id: req.params.id}, (result) => {
+        if (result !== undefined) {
+          res.send(result);
+        } else {
+          res.statusCode = 404;
+          res.end();
+        }
+    })
+});
+
+app.get("/api/planets/:id/characters", function (req, res) {
+    dao.call("findCharactersByPlanet", {id: req.params.id}, (result) => {
+        if (result !== undefined) {
+          res.send(result);
+        } else {
+          res.statusCode = 404;
+          res.end();
+        }
+    })
+});
+
 
 app.get("/api/films/:id", function (req, res) {
   dao.call("findOneFilm", { id: req.params.id }, (result) => {

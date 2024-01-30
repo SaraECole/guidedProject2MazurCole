@@ -22,6 +22,7 @@ module.exports.call = async function call(operation, parameters, callback) {
   // set the database to use
   const db = client.db(dbName);
   let collection = "";
+  let character = "";
 
   switch (operation) {
     case "findAllPlanets":
@@ -61,6 +62,32 @@ module.exports.call = async function call(operation, parameters, callback) {
         })
         .toArray();
       callback({ planetsByFilm: planetsByFilm });
+
+    case "findAllCharacters":
+      collection = db.collection(collectionCharacters);
+      const characters = await collection.find({}).toArray();
+      callback({ characters: characters });
+      break;
+    case "findOneCharacter":
+      collection = db.collection(collectionCharacters);
+      character = await collection.findOne({ id: parseInt(parameters.id) });
+      callback({ character: character });
+      break;
+    case "findFilmsByCharacter":
+      collection = db.collection(collectionFilmsCharacters);
+      const filmsByCharacter = await collection.find({ character_id: parseInt(parameters.id) }).toArray();
+      callback({ filmsByCharacter: filmsByCharacter });
+      break;
+    case "findFilmsByPlanet":
+      collection = db.collection(collectionFilmsPlanets);
+      const filmsByPlanet = await collection.find({ planet_id: parseInt(parameters.id) }).toArray();
+      callback({ filmsByPlanet: filmsByPlanet });
+      break;
+    case "findCharactersByPlanet":
+      collection = db.collection(collectionCharacters);
+      const charactersByPlanet = await collection.find({ homeworld: parseInt(parameters.id) }).toArray();
+      callback({ charactersByPlanet: charactersByPlanet });
+
       break;
     default:
       break;
