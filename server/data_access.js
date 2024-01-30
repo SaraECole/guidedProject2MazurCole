@@ -30,11 +30,39 @@ module.exports.call = async function call(operation, parameters, callback) {
       const planets = await collection.find({}).toArray();
       callback({ planets: planets });
       break;
+    case "findAllFilms":
+      collection = db.collection(collectionFilms);
+      const films = await collection.find({}).toArray();
+      callback({ films: films });
+      break;
     case "findOnePlanet":
       collection = db.collection(collectionPlanets);
       const planet = await collection.findOne({ id: parseInt(parameters.id) });
       callback({ planet: planet });
       break;
+    case "findOneFilm":
+      collection = db.collection(collectionFilms);
+      const film = await collection.findOne({ id: parseInt(parameters.id) });
+      callback({ film: film });
+      break;
+    case "findCharactersByFilm":
+      collection = db.collection(collectionFilmsCharacters);
+      const charactersByFilm = await collection
+        .find({
+          film_id: parseInt(parameters.id),
+        })
+        .toArray();
+      callback({ charactersByFilm: charactersByFilm });
+      break;
+    case "findPlanetsByFilm":
+      collection = db.collection(collectionFilmsPlanets);
+      const planetsByFilm = await collection
+        .find({
+          film_id: parseInt(parameters.id),
+        })
+        .toArray();
+      callback({ planetsByFilm: planetsByFilm });
+
     case "findAllCharacters":
       collection = db.collection(collectionCharacters);
       const characters = await collection.find({}).toArray();
@@ -59,6 +87,7 @@ module.exports.call = async function call(operation, parameters, callback) {
       collection = db.collection(collectionCharacters);
       const charactersByPlanet = await collection.find({ homeworld: parseInt(parameters.id) }).toArray();
       callback({ charactersByPlanet: charactersByPlanet });
+
       break;
     default:
       break;
