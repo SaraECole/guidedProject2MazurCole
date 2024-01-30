@@ -21,12 +21,18 @@ module.exports.call = async function call(operation, parameters, callback) {
 
   // set the database to use
   const db = client.db(dbName);
+  let collection = "";
 
   switch (operation) {
-    case 'findAllPlanets':
-      const collection = db.collection(collectionPlanets);
+    case "findAllPlanets":
+      collection = db.collection(collectionPlanets);
       const planets = await collection.find({}).toArray();
       callback({ planets: planets });
+      break;
+    case "findOnePlanet":
+      collection = db.collection(collectionPlanets);
+      const planet = await collection.findOne({ id: parseInt(parameters.id) });
+      callback({ planet: planet });
       break;
     default:
       break;
@@ -35,4 +41,3 @@ module.exports.call = async function call(operation, parameters, callback) {
   client.close();
   return "call complete";
 };
-

@@ -15,6 +15,18 @@ app.get("/api/planets", function (req, res) {
   });
 });
 
+app.get("/api/planets/:id", function (req, res) {
+    dao.call("findOnePlanet", {id: req.params.id}, (result) => {
+        if (result.planet !== undefined) {
+          res.send(result.planet);
+        } else {
+          res.statusCode = 404;
+          res.end();
+        }
+    })
+})
+
 const port = 3000;
 console.log("server starting on port: " + port);
 app.listen(port);
+
